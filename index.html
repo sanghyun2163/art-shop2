@@ -2,86 +2,168 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>ART Store</title>
+  <title>ART Store | Premium Windbreakers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #000000;
-      --bg-color: #ffffff;
-      --text-main: #111111;
-      --text-muted: #666666;
-      --border-color: #e5e7eb;
+      --primary: #111111;
+      --secondary: #333333;
+      --bg-color: #fcfcfc;
+      --text-main: #1a1a1a;
+      --text-muted: #888888;
+      --border-color: #eaeaea;
+      --accent: #000000;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Outfit', sans-serif;
       color: var(--text-main);
       background-color: var(--bg-color);
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
-    a { text-decoration: none; color: inherit; cursor: pointer; }
+    a { text-decoration: none; color: inherit; cursor: pointer; transition: 0.2s; }
     button { cursor: pointer; border: none; background: none; font-family: inherit; }
     
-    /* Header (상단 메뉴) */
+    /* Header (Glassmorphism Nav) */
     .header {
-      position: absolute; top: 0; left: 0; right: 0;
-      padding: 1.5rem 3rem;
+      position: fixed; top: 0; left: 0; right: 0;
+      padding: 1.2rem 3rem;
       display: flex; justify-content: space-between; align-items: center;
-      z-index: 100;
-      color: white;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+      color: var(--primary);
+      transition: all 0.3s ease;
     }
-    .header.nav-dark {
-      position: sticky; background: white; color: var(--text-main); border-bottom: 1px solid var(--border-color);
+    .header-left nav { display: flex; gap: 2.5rem; font-weight: 500; letter-spacing: 1px; font-size: 0.95rem; }
+    .header-left nav a:hover { color: var(--text-muted); }
+    .header-center { font-size: 2.2rem; font-weight: 900; letter-spacing: 4px; text-transform: uppercase; cursor:pointer;}
+    .header-right { display: flex; gap: 1.5rem; font-size: 1.2rem; }
+    
+    /* Cart Badge */
+    .cart-btn-wrapper { position: relative; }
+    .cart-badge {
+      position: absolute; top: -8px; right: -10px;
+      background: var(--accent); color: white;
+      font-size: 0.7rem; font-weight: bold;
+      width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; display: none;
     }
-    .header-left nav { display: flex; gap: 2rem; font-weight: 500; }
-    .header-center { font-size: 1.8rem; font-weight: 800; letter-spacing: 2px; }
-    .header-right { display: flex; gap: 1.5rem; }
 
-    /* 화면들 공통 숨김 처리 */
-    .page { display: none; min-height: 100vh; }
+    /* Pages */
+    .page { display: none; min-height: 100vh; animation: fadeIn 0.4s ease-out forwards; }
     .page.active { display: block; }
 
-    /* Home 페이지: Hero Section */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Home: Hero */
     .hero {
       height: 100vh;
-      background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=2069&auto=format&fit=crop');
+      background-image: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 100%), url('hero.png');
       background-size: cover; background-position: center;
-      display: flex; align-items: center; justify-content: center;
+      display: flex; align-items: center; justify-content: center; text-align: center;
+      flex-direction: column; color: white;
     }
-    .hero-logo-large { font-size: clamp(8rem, 25vw, 25rem); font-weight: 900; color: #eee; letter-spacing: -5px; }
+    .hero h1 { font-size: clamp(4rem, 8vw, 8rem); font-weight: 900; letter-spacing: -2px; margin-bottom: 1rem; }
+    .hero p { font-size: 1.5rem; font-weight: 300; margin-bottom: 3rem; letter-spacing: 1px;}
+    .btn-primary {
+      background-color: white; color: black; padding: 1.2rem 3rem; border-radius: 50px;
+      font-size: 1.1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+      transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .btn-primary:hover { background-color: var(--primary); color: white; transform: translateY(-3px); }
 
-    /* Home 페이지: 벚꽃 프로모션 */
-    .promo-section {
-      height: 100vh;
-      background-image: url('https://images.unsplash.com/photo-1522383225653-ed111181a951?q=80&w=2076&auto=format&fit=crop');
-      background-size: cover; background-position: center;
-      padding: 5rem; display: flex; align-items: center;
-    }
-    .promo-content { max-width: 500px; }
-    .promo-title { font-size: 4rem; font-weight: 800; color: white; margin-bottom: 1rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-    .promo-text { font-size: 1.2rem; color: white; line-height: 1.5; margin-bottom: 2rem; }
-    .btn-pill {
-      background-color: rgba(255,255,255,0.85); padding: 1rem 2rem; border-radius: 50px; font-weight: 600; transition: 0.3s;
-    }
-    .btn-pill:hover { background-color: white; transform: translateY(-2px); }
-
-    /* Catalog (상품리스트) 페이지 */
-    .catalog-page { padding: 8rem 3rem 4rem; }
-    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; margin-top: 2rem; }
-    .product-card { cursor: pointer; transition: 0.3s; }
-    .product-card:hover { transform: translateY(-5px); }
-    .product-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #f7f7f7; margin-bottom: 1rem; position: relative; }
+    /* Catalog Page */
+    .catalog-page { padding: 8rem 3rem 4rem; max-width: 1400px; margin: 0 auto; }
+    .catalog-title { font-size: 3rem; font-weight: 800; margin-bottom: 3rem; text-align: center;}
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 3rem; }
     
-    /* Product Detail (상품상세) 페이지 */
-    .pdp-container { padding: 8rem 3rem 4rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
-    .pdp-img { width: 100%; object-fit: cover; background: #f7f7f7; }
-    .qty-box { display: flex; border: 1px solid black; border-radius: 50px; overflow: hidden; width: max-content; }
-    .qty-btn { width: 40px; height: 40px; font-size: 1.2rem; }
-    .qty-input { width: 40px; text-align: center; border: none; font-size: 1.1rem; }
-    .add-cart { flex:1; background: #9ba3af; color: white; border-radius: 50px; padding: 0 2rem; font-size: 1.1rem; transition: 0.3s; margin-left: 1rem; }
-    .add-cart.active { background: black; }
+    /* Product Card */
+    .product-card { cursor: pointer; transition: 0.4s ease; group; }
+    .product-img-wrapper { position: relative; overflow: hidden; border-radius: 12px; background: #f0f0f0; margin-bottom: 1.5rem; aspect-ratio: 4/5;}
+    .product-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .product-card:hover .product-img { transform: scale(1.05); }
+    .product-info { display: flex; justify-content: space-between; align-items: center; }
+    .product-name { font-weight: 700; font-size: 1.2rem; color: var(--text-main); }
+    .product-price { font-weight: 500; font-size: 1.1rem; color: var(--text-muted); }
+
+    /* Detail Page */
+    .detail-page { padding: 9rem 3rem 4rem; max-width: 1200px; margin: 0 auto; }
+    .pdp-container { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+    .pdp-img-wrapper { border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.08); background: #f9f9f9; }
+    .pdp-img { width: 100%; object-fit: cover; display: block; aspect-ratio: 4/5;}
+    
+    .pdp-info h1 { font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem; line-height: 1.2;}
+    .pdp-price { font-size: 1.5rem; color: var(--text-muted); margin-bottom: 2rem; font-weight: 500; }
+    
+    /* Sizes */
+    .size-label { font-size: 0.9rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.8rem; display: block; letter-spacing: 1px;}
+    .size-group { display: flex; gap: 1rem; margin-bottom: 3rem; }
+    .size-btn { width: 50px; height: 50px; border: 1px solid var(--border-color); border-radius: 8px; font-weight: 600; transition: 0.2s; background: white;}
+    .size-btn:hover { border-color: var(--primary); }
+    .size-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }
+
+    /* Actions */
+    .action-group { display: flex; gap: 1rem; }
+    .qty-box { display: flex; border: 1px solid var(--border-color); border-radius: 50px; height: 56px; overflow: hidden; align-items: center; width: 130px; justify-content: space-between; padding: 0 5px;}
+    .qty-btn { width: 40px; height: 40px; font-size: 1.5rem; border-radius: 50%; transition: 0.2s; display:flex; align-items:center; justify-content:center;}
+    .qty-btn:hover { background: #f0f0f0; }
+    .qty-input { width: 30px; text-align: center; border: none; font-size: 1.2rem; font-weight: 600; background: transparent;}
+    .add-cart-btn { flex: 1; background: var(--primary); color: white; border-radius: 50px; font-size: 1.1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; height: 56px;}
+    .add-cart-btn:hover { background: #333; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.15);}
+    .add-cart-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none;}
+
+    /* Reviews Section */
+    .reviews-section { margin-top: 5rem; padding-top: 3rem; border-top: 1px solid var(--border-color); }
+    .reviews-section h3 { font-size: 1.8rem; font-weight: 800; margin-bottom: 2rem; }
+    .review-item { margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #f9f9f9;}
+    .review-stars { color: #FFD700; font-size: 1.2rem; margin-bottom: 0.5rem; letter-spacing: 2px;}
+    .review-user { font-weight: 700; margin-bottom: 0.5rem; display: flex; align-items:center; gap: 10px;}
+    .review-date { font-weight: 400; color: var(--text-muted); font-size: 0.85rem;}
+    .review-text { color: #444; line-height: 1.6; }
+
+    /* Cart Drawer */
+    .cart-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; opacity: 0; pointer-events: none; transition: 0.3s ease; backdrop-filter: blur(5px);}
+    .cart-overlay.show { opacity: 1; pointer-events: auto; }
+    
+    .cart-drawer { position: fixed; top: 0; right: -450px; width: 400px; height: 100vh; background: white; z-index: 1001; transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: -10px 0 30px rgba(0,0,0,0.1); display: flex; flex-direction: column;}
+    .cart-drawer.open { right: 0; }
+    
+    .cart-header { padding: 2rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+    .cart-header h2 { font-size: 1.5rem; font-weight: 800; }
+    .close-cart { font-size: 2rem; line-height: 1; transition: 0.2s; }
+    .close-cart:hover { transform: rotate(90deg); color: red;}
+
+    .cart-items { flex: 1; overflow-y: auto; padding: 2rem; }
+    .cart-empty { text-align: center; color: var(--text-muted); margin-top: 3rem; font-size: 1.1rem;}
+    
+    .cart-item { display: flex; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #f0f0f0; }
+    .cart-item-img { width: 80px; height: 100px; object-fit: cover; border-radius: 8px; }
+    .cart-item-info { flex: 1; display:flex; flex-direction: column; justify-content: center;}
+    .cart-item-title { font-weight: 600; font-size: 1.1rem; margin-bottom: 0.3rem;}
+    .cart-item-meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;}
+    .cart-item-price { font-weight: 700; }
+
+    .cart-footer { padding: 2rem; border-top: 1px solid var(--border-color); background: #fafafa;}
+    .cart-total { display: flex; justify-content: space-between; font-weight: 800; font-size: 1.3rem; margin-bottom: 1.5rem; }
+    .checkout-btn { width: 100%; background: var(--primary); color: white; padding: 1.2rem; border-radius: 50px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 1.1rem; transition: 0.3s;}
+    .checkout-btn:hover { background: #333; }
 
     /* Footer */
-    .footer { background: #e2e8f5; padding: 4rem; margin-top: auto; }
+    .footer { background: var(--primary); color: white; padding: 4rem 3rem; text-align: center; }
+    .footer p { opacity: 0.7; font-weight: 300; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .pdp-container { grid-template-columns: 1fr; gap: 3rem; }
+      .header { padding: 1rem 1.5rem; }
+      .cart-drawer { width: 100%; right: -100%; }
+    }
   </style>
 </head>
 <body>
@@ -91,57 +173,118 @@
     <div class="header-left">
       <nav>
         <a onclick="goPage('home')">Home</a>
-        <a onclick="goPage('catalog')">Catalog</a>
+        <a onclick="goPage('catalog')">Shop</a>
       </nav>
     </div>
     <div class="header-center"><a onclick="goPage('home')">ART</a></div>
-    <div class="header-right">🔍 👤 🛒</div>
+    <div class="header-right">
+      <button>🔍</button>
+      <button>👤</button>
+      <button class="cart-btn-wrapper" onclick="toggleCart()">
+        🛒
+        <div class="cart-badge" id="cart-badge-count">0</div>
+      </button>
+    </div>
   </header>
+
+  <!-- 슬라이드 장바구니 Drawer -->
+  <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-header">
+      <h2>Your Cart</h2>
+      <button class="close-cart" onclick="toggleCart()">×</button>
+    </div>
+    <div class="cart-items" id="cart-items-container">
+      <div class="cart-empty">장바구니가 비어 있습니다.</div>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total</span>
+        <span id="cart-total-price">₩0</span>
+      </div>
+      <!-- 주문하기 버튼 누를 시 데이터베이스 연동 확인용 알림 -->
+      <button class="checkout-btn" onclick="alert('데이터가 파이어베이스에 안전하게 저장되었습니다! \n결제 모듈은 추후 연동됩니다.')">Checkout</button>
+    </div>
+  </div>
 
   <!-- 1. Home 페이지 -->
   <div id="page-home" class="page active">
     <!-- 메인 배너 -->
-    <section class="hero"><div class="hero-logo-large">ART</div></section>
-    <!-- 프로모션 섹션 -->
-    <section class="promo-section">
-      <div class="promo-content">
-        <h2 class="promo-title">ART 바람막이</h2>
-        <p class="promo-text">내구성과 편안함을 위해 설계된 이 재킷은 기능과 멋을 자연스럽게 결합합니다.</p>
-        <button class="btn-pill" onclick="goPage('catalog')">Shop now</button>
-      </div>
+    <section class="hero">
+      <h1>NEW COLLECTION</h1>
+      <p>Premium Windbreakers Engineered for the Elements.</p>
+      <button class="btn-primary" onclick="goPage('catalog')">Shop the Collection</button>
     </section>
   </div>
 
-  <!-- 2. Catalog 페이지 -->
+  <!-- 2. Catalog (Shop) 페이지 -->
   <div id="page-catalog" class="page catalog-page">
-    <h1>Products</h1>
+    <h1 class="catalog-title">Shop All</h1>
     <div class="product-grid" id="product-list">
-      <!-- 자바스크립트로 자동 생성 -->
+      <!-- 자바스크립트로 렌더링 -->
     </div>
   </div>
 
   <!-- 3. Product Detail 페이지 -->
-  <div id="page-detail" class="page">
+  <div id="page-detail" class="page detail-page">
     <div class="pdp-container">
-      <img id="detail-img" class="pdp-img" src="" alt="상품 이미지">
-      <div>
-        <h1 id="detail-name" style="font-size:2.5rem; margin-bottom: 1rem;">상품명</h1>
-        <p id="detail-price" style="font-size:1.2rem; margin-bottom: 2rem; color: #666;">가격</p>
-        <div style="display:flex;">
+      <!-- 왼쪽 이미지 -->
+      <div class="pdp-img-wrapper">
+        <img id="detail-img" class="pdp-img" src="" alt="상품 이미지">
+      </div>
+      
+      <!-- 오른쪽 상세 정보 -->
+      <div class="pdp-info">
+        <h1 id="detail-name">상품명</h1>
+        <p id="detail-price" class="pdp-price">가격</p>
+        
+        <span class="size-label">Select Size</span>
+        <div class="size-group">
+          <button class="size-btn" onclick="selectSize('S')">S</button>
+          <button class="size-btn" onclick="selectSize('M')">M</button>
+          <button class="size-btn selected" onclick="selectSize('L')">L</button>
+          <button class="size-btn" onclick="selectSize('XL')">XL</button>
+        </div>
+
+        <div class="action-group">
           <div class="qty-box">
             <button class="qty-btn" onclick="changeQty(-1)">-</button>
             <input id="qty-val" type="text" class="qty-input" value="1" readonly>
             <button class="qty-btn" onclick="changeQty(1)">+</button>
           </div>
-          <button id="add-btn" class="add-cart active" onclick="addToCart()">Add to cart</button>
+          <button id="add-btn" class="add-cart-btn" onclick="addToCart()">Add to cart</button>
         </div>
+
+        <!-- 구매 후기 섹션 -->
+        <div class="reviews-section">
+          <h3>Customer Reviews (3)</h3>
+          
+          <div class="review-item">
+            <div class="review-stars">★★★★★</div>
+            <div class="review-user">김태* <span class="review-date">2026.04.05</span></div>
+            <p class="review-text">핏이 예술입니다. 네이비 색감을 너무 잘 뽑았고 재질이 고급스러워요. 강력 추천합니다.</p>
+          </div>
+          
+          <div class="review-item">
+            <div class="review-stars">★★★★★</div>
+            <div class="review-user">이준* <span class="review-date">2026.04.02</span></div>
+            <p class="review-text">봄가을에 입기 딱 좋은 두께감! 배송도 빠르고 상품 상태도 매우 좋았습니다.</p>
+          </div>
+
+          <div class="review-item">
+            <div class="review-stars">★★★★☆</div>
+            <div class="review-user">박서* <span class="review-date">2026.03.28</span></div>
+            <p class="review-text">평소 L 입는데 L 사이즈 넉넉하게 잘 맞네요. 지퍼도 부드럽고 만족스럽습니다.</p>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 
   <!-- Footer -->
   <footer class="footer">
-    <p>© 2026 ART Store 🚀</p>
+    <p>© 2026 ART Store. All Rights Reserved.</p>
   </footer>
 
   <!-- Firebase Scripts -->
@@ -162,92 +305,192 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    // 새 사진 적용 상품 목록
+    // 상품 목록 (.png 에셋으로 수정)
     const products = [
-      { id: 1, name: 'ART 네이비 바람막이', price: '₩170,000', img: './navy.jpg' },
-      { id: 2, name: 'ART 그레이 바람막이', price: '₩170,000', img: './gray.jpg' },
-      { id: 3, name: 'ART 블랙 바람막이',  price: '₩170,000', img: './black.jpg' }
+      { id: 1, name: 'ART Premium Navy Windbreaker', price: 170000, img: 'navy.png' },
+      { id: 2, name: 'ART Premium Gray Windbreaker', price: 170000, img: 'gray.png' },
+      { id: 3, name: 'ART Premium Black Windbreaker', price: 170000, img: 'black.png' }
     ];
 
     let currentQty = 1;
     let selectedProduct = null;
+    let selectedSizeValue = 'L'; // 기본 L 사이즈
+    
+    // 로컬 장바구니 상태
+    let localCart = [];
 
+    // 가격 포맷 함수 (콤마 추가)
+    const formatPrice = (price) => `₩${price.toLocaleString()}`;
+
+    // 상품 목록 채우기
+    const listDiv = document.getElementById('product-list');
+    products.forEach(p => {
+      listDiv.innerHTML += `
+        <div class="product-card" onclick="goPage('detail', ${p.id})">
+          <div class="product-img-wrapper">
+            <img class="product-img" src="${p.img}" alt="${p.name}">
+          </div>
+          <div class="product-info">
+            <div class="product-name">${p.name}</div>
+            <div class="product-price">${formatPrice(p.price)}</div>
+          </div>
+        </div>
+      `;
+    });
+
+    // 페이지 이동 함수
     function goPage(pageId, productId = null) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById('page-' + pageId).classList.add('active');
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
 
+      // 상단 메뉴바 스크롤 디자인
       const header = document.getElementById('main-header');
-      if (pageId === 'home') header.className = 'header';
-      else header.className = 'header nav-dark';
+      if (pageId === 'home') header.style.background = 'rgba(255, 255, 255, 0.7)';
+      else header.style.background = 'rgba(255, 255, 255, 0.95)';
 
       if (pageId === 'detail' && productId) {
         selectedProduct = products.find(p => p.id === productId);
-        // 상품 이미지, 이름, 가격 정보 화면에 표시
         document.getElementById('detail-img').src = selectedProduct.img;
         document.getElementById('detail-name').innerText = selectedProduct.name;
-        document.getElementById('detail-price').innerText = selectedProduct.price;
+        document.getElementById('detail-price').innerText = formatPrice(selectedProduct.price);
+        
         currentQty = 1;
         document.getElementById('qty-val').value = currentQty;
+        selectSize('L'); // 기본값 L로 리셋
         
-        // 상품 구경 시 장바구니 버튼 활성화 초기화
         const addBtn = document.getElementById('add-btn');
         addBtn.innerText = "Add to cart";
         addBtn.disabled = false;
       }
     }
 
-    // 상품 목록 카드 생성하기
-    const listDiv = document.getElementById('product-list');
-    products.forEach(p => {
-      listDiv.innerHTML += `
-        <div class="product-card" onclick="goPage('detail', ${p.id})">
-          <div style="position:relative;">
-            <img class="product-img" src="${p.img}" alt="${p.name}">
-          </div>
-          <div style="font-weight:bold;">${p.name}</div>
-          <div style="color:gray">${p.price}</div>
-        </div>
-      `;
-    });
-
-    // 수량 조절 버튼
+    // 수량 조절
     function changeQty(diff) {
       currentQty += diff;
       if(currentQty < 1) currentQty = 1;
       document.getElementById('qty-val').value = currentQty;
     }
 
-    // 파이어베이스 DB에 장바구니 데이터를 저장하는 함수
+    // 사이즈 선택
+    function selectSize(size) {
+      selectedSizeValue = size;
+      const buttons = document.querySelectorAll('.size-btn');
+      buttons.forEach(btn => {
+        if(btn.innerText === size) btn.classList.add('selected');
+        else btn.classList.remove('selected');
+      });
+    }
+
+    // 장바구니 열기/닫기
+    function toggleCart() {
+      const drawer = document.getElementById('cart-drawer');
+      const overlay = document.getElementById('cart-overlay');
+      drawer.classList.toggle('open');
+      overlay.classList.toggle('show');
+    }
+
+    // 장바구니 화면 렌더링
+    function renderCart() {
+      const cartContainer = document.getElementById('cart-items-container');
+      const badge = document.getElementById('cart-badge-count');
+      const totalEl = document.getElementById('cart-total-price');
+      
+      let totalAmount = 0;
+      let totalItems = 0;
+
+      if (localCart.length === 0) {
+        cartContainer.innerHTML = '<div class="cart-empty">장바구니가 비어 있습니다. 🛒</div>';
+        badge.style.display = 'none';
+        totalEl.innerText = '₩0';
+        return;
+      }
+
+      let html = '';
+      localCart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        totalAmount += itemTotal;
+        totalItems += item.quantity;
+        
+        html += `
+          <div class="cart-item">
+            <img class="cart-item-img" src="${item.img}" alt="${item.name}">
+            <div class="cart-item-info">
+              <div class="cart-item-title">${item.name}</div>
+              <div class="cart-item-meta">Size: ${item.size} | Qty: ${item.quantity}</div>
+              <div class="cart-item-price">${formatPrice(itemTotal)}</div>
+            </div>
+            <button style="border:none; background:transparent; cursor:pointer; font-size:1.5rem; color:#999;" onclick="removeCartItem(${index})">×</button>
+          </div>
+        `;
+      });
+
+      cartContainer.innerHTML = html;
+      totalEl.innerText = formatPrice(totalAmount);
+      
+      // 배지 업데이트
+      badge.innerText = totalItems;
+      badge.style.display = 'flex';
+    }
+
+    // 장바구니에서 개별 삭제
+    function removeCartItem(index) {
+      localCart.splice(index, 1);
+      renderCart();
+    }
+
+    // 장바구니 추가 & Firebase 저장
     function addToCart() {
       const btn = document.getElementById('add-btn');
-      btn.innerText = "저장 중...";
+      btn.innerText = "Adding...";
       btn.disabled = true;
 
-      const cartRef = database.ref('carts');
       const orderData = {
         productId: selectedProduct.id,
         productName: selectedProduct.name,
         price: selectedProduct.price,
         quantity: currentQty,
+        size: selectedSizeValue,
+        img: selectedProduct.img,
         timestamp: firebase.database.ServerValue.TIMESTAMP
       };
 
-      // 만일에 대비해 파이어베이스 통신 대기 없이 바로 에러 콜백만 백그라운드로 남겨둠
-      cartRef.push(orderData, (error) => {
-        if (error) {
-          console.error("데이터베이스 저장 에러:", error);
-        }
+      // 1. Firebase 데이터베이스에 비동기 저장
+      const cartRef = database.ref('carts');
+      cartRef.push({
+        productId: orderData.productId,
+        productName: orderData.productName,
+        price: orderData.price,
+        quantity: orderData.quantity,
+        size: orderData.size,
+        timestamp: orderData.timestamp
+      }, (error) => {
+        if (error) console.error("데이터베이스 저장 에러:", error);
       });
 
-      // 데이터 저장 요청 후, 즉시 사용자에게 '담김' 알림 주기 (클릭 멈춤 현상 완벽 방지)
+      // 2. 화면의 로컬 장바구니 배열에 추가
+      // 이미 같은 상품+같은사이즈가 있으면 수량만 추가
+      const existingItem = localCart.find(item => item.productId === orderData.productId && item.size === orderData.size);
+      if (existingItem) {
+        existingItem.quantity += currentQty;
+      } else {
+        localCart.push(orderData);
+      }
+
+      // 3. UI 업데이트 및 애니메이션
       setTimeout(() => { 
-        alert(selectedProduct.name + " " + currentQty + "개가 장바구니 리스트에 등록되었습니다!"); 
+        renderCart();             // 장바구니 리스트 다시 그리기
+        btn.innerText = "Added";  // 버튼 글꼴 변경
         
-        // 알림창 닫으면 다시 버튼 누를 수 있게 리셋
-        btn.innerText = "Add to cart";
-        btn.disabled = false;
-      }, 50);
+        // 장바구니 서랍 자동으로 열기
+        toggleCart();
+
+        // 1초 뒤에 다시 버튼 누를 수 있게 리셋
+        setTimeout(() => {
+          btn.innerText = "Add to cart";
+          btn.disabled = false;
+        }, 1000);
+      }, 400); 
     }
   </script>
 </body>
